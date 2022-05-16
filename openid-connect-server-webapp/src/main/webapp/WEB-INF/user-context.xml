@@ -30,11 +30,18 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<bean id="fujisanUserDetailService" class="org.mitre.openid.connect.service.impl.FujisanUserDetailService" />
 	<security:authentication-manager id="authenticationManager">
+
+		<security:authentication-provider user-service-ref="fujisanUserDetailService">
+			<security:password-encoder ref="noOpPasswordEncoder"/>
+		</security:authentication-provider>
+		<!--
 		<security:authentication-provider>
 			<security:jdbc-user-service data-source-ref="dataSource"/>
 			<security:password-encoder ref="noOpPasswordEncoder"/>
 		</security:authentication-provider>
+		-->
 	</security:authentication-manager>
 		
 	<mvc:view-controller path="/login" view-name="login" />
