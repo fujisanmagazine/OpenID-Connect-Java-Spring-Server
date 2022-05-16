@@ -20,10 +20,15 @@ package org.mitre.openid.connect.service.impl;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.ClientDetailsEntity.SubjectType;
 import org.mitre.oauth2.service.ClientDetailsEntityService;
+import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
 import org.mitre.openid.connect.repository.UserInfoRepository;
+import org.mitre.openid.connect.repository.impl.UserApiClient;
+import org.mitre.openid.connect.repository.impl.UserDto;
 import org.mitre.openid.connect.service.PairwiseIdentiferService;
 import org.mitre.openid.connect.service.UserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +41,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultUserInfoService implements UserInfoService {
 
+	private static final Logger logger = LoggerFactory.getLogger(DefaultUserInfoService.class);
+
 	@Autowired
 	private UserInfoRepository userInfoRepository;
 
@@ -45,13 +52,26 @@ public class DefaultUserInfoService implements UserInfoService {
 	@Autowired
 	private PairwiseIdentiferService pairwiseIdentifierService;
 
+
 	@Override
 	public UserInfo getByUsername(String username) {
-		return userInfoRepository.getByUsername(username);
+		logger.info("getByUsername: " + username);
+		UserApiClient apiClient = new UserApiClient();
+		UserDto dto = apiClient.findByCredentials(username);
+		DefaultUserInfo userInfo = new DefaultUserInfo();
+		userInfo.setId(Long.parseLong(dto.id));
+		userInfo.setSub(dto.id);
+		userInfo.setEmail(dto.login);
+		// return userInfoRepository.getByUsername(username);
+		logger.info("getByUsername: " + userInfo);
+		return userInfo;
 	}
 
 	@Override
 	public UserInfo getByUsernameAndClientId(String username, String clientId) {
+
+		logger.info("getByUsernameAndClientId: " + username);
+		logger.info("getByUsernameAndClientId: " + clientId);
 
 		ClientDetailsEntity client = clientService.loadClientByClientId(clientId);
 
