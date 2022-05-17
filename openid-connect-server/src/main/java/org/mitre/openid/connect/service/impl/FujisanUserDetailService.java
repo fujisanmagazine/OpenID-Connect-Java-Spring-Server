@@ -19,8 +19,15 @@ public class FujisanUserDetailService implements UserDetailsService {
 		UserApiClient client = new UserApiClient();
 		UserDto dto = client.findByCredentials(username);
 		if (dto != null) {
-			logger.info("loadUserByUsername ============================ user found");
-			return new User(username, dto.password, AuthorityUtils.createAuthorityList("ROLE_USER"));
+			  logger.info("loadUserByUsername ============================ user found");
+			  return new User(
+            username,
+            dto.password,
+            AuthorityUtils.createAuthorityList(
+              "ROLE_ADMIN",
+              "ROLE_USER"
+            )
+        );
 		}
 		logger.info("user not found");
 		throw new UsernameNotFoundException("not found : " + username);

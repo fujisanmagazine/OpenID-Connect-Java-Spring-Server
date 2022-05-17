@@ -19,11 +19,12 @@ INSERT INTO client_scope_TEMP (owner_id, scope) VALUES
 	('client', 'email'),
 	('client', 'address'),
 	('client', 'phone'),
-	('client', 'offline_access');
+	('client', 'offline_access'),
+	('client', 'uma_protection');
 
 INSERT INTO client_redirect_uri_TEMP (owner_id, redirect_uri) VALUES
 	('client', 'http://localhost/'),
-	('client', 'http://localhost:3003/auth/callback_custom'),
+	('client', 'http://localhost:3003/auth/callback_original'),
 	('client', 'http://localhost:8080/');
 	
 INSERT INTO client_grant_type_TEMP (owner_id, grant_type) VALUES
